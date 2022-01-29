@@ -1,0 +1,950 @@
+﻿Initialiser();
+//Déclarations des variables
+//	Définition des tableaux 
+var all = [],
+ pair = [],
+ impair = [];
+rouge = [];
+noir = [];
+var i;
+
+//	Remplir all
+for (i = 1; i < 37; i++) {
+  all[i - 1] = i;
+}
+//	Remplir Pair
+for (i = 0; i < 18; i++) {
+  pair[i] = (i + 1) * 2;
+}
+//	Remplir Impair
+for (i = 0; i < 18; i++) {
+  impair[i] = ((i + 1) * 2) - 1;
+}
+//  Remplir Rouge et Noir
+for (i = 0; i < 18; i = i + 1) {
+  if (i >= 0 && i <= 4 || i >= 9 && i <= 13) {
+    noir[i] = (i + 1) * 2;
+    rouge[i] = (i * 2) + 1;
+  } else {
+    noir[i] = (i * 2) + 1;
+    rouge[i] = (i + 1) * 2;
+  }
+}
+
+//	Variables Partie Choix du joueur
+var choix_joueur, confirmation;
+var mise, coeff, gain, banque;
+
+
+// Variables Mise Joueur
+//   Utilisé pour les Jetons
+var TableCouleur = ['white', 'red', 'blue', 'green', rgb(50, 50, 50)],
+ Table_Mise = [1, 5, 50, 200, 500];
+Nb_Mise = [0, 0, 0, 0, 0];
+Choix_Mise = false;
+Total_Mise = 0;
+// Variables Roulette 
+
+
+
+
+// Lancement de l'écran Menu d'accueil
+var Etat = 1;
+if (Etat == 1) {
+  Menu();
+}
+// Partie Graphique
+// Etat = 1 : Menu d'accueil
+
+function Menu() {
+  //Initialisation des Variables
+  TableauRoulette = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
+  roulette = 0;
+  regles = 0;
+  quitter = 0;
+  m = 0;
+  Recap = 0;
+  t=-1;
+  choix_joueur = [];
+  choix_joueur_ = [];
+  def_choix_joueur_ = [];
+  coeff_ = [];
+  Total_Mise_ = [];
+  confirmationcj = 0;
+  banque = 1000;
+  gameover = false;
+  alerte = true;
+  // Partie Graphique du Menu
+  Viewport(0, 0, 1365, 595);
+  turtleEnabled = false;
+  Initialiser();
+  DrawImage('https://bfgblog-a.akamaihd.net/uploads/2013/11/6-4-European-Roulette.png', 50, 50, 500, 500);
+  RectanglePlein(0, 0, 1600, 1200, rgb(50, 130, 50));
+  ShadowOn();
+  Rectangle(400, 100, 700, 90, 'black');
+  RectanglePlein(392, 107, 700, 75, rgb(195, 195, 195));
+  setCanvasFont('stencil', '40pt', '');
+  Texte(710, 158, 'Jouer', 'red');
+  Rectangle(365, 250, 650, 90, 'black');
+  RectanglePlein(372, 257, 635, 75, rgb(195, 195, 195));
+  setCanvasFont('stencil', '40pt', '');
+  Texte(650, 312, 'Règles', 'red');
+  Rectangle(365, 400, 550, 90, 'black');
+  RectanglePlein(372, 407, 535, 75, rgb(195, 195, 195));
+  setCanvasFont('stencil', '40pt', '');
+  Texte(580, 462, 'Credit', 'red');
+  ShadowOff();
+}
+
+// Ecran règles 
+
+function Regles() {
+
+  Initialiser();
+  Viewport(0, 0, 1400, 600);
+  RectanglePlein(0, 600, 1400, 600, rgb(50, 130, 50));
+  RectanglePlein(75, 580, 1250, 560, rgb(190, 190, 190));
+  ShadowOn();
+  Rectangle(71, 582, 1255, 563, 'black');
+  RectanglePlein(600, 580, 175, 50, 'orange');
+  RectanglePlein(10, 325, 50, 50, rgb(200, 200, 200));
+  ShadowOff();
+  setCanvasFont('stencil', '30pt', '');
+  Texte(610, 540, 'Règles', 'black');
+  setCanvasFont('calibri', '20pt', '');
+  Texte(24, 295, '<', 'black');
+
+  if (Page == 1) {
+    ShadowOn();
+    RectanglePlein(1340, 325, 50, 50, rgb(200, 200, 200));
+    ShadowOff();
+    Texte(1359, 295, '>', 'black');
+    setCanvasFont('stencil', '20pt', '');
+    Texte(80, 480, 'Vous commencez le jeu avec 1000$, \nvotre but est de remporter le maximum d\'argent ! \nVous pouvez effectuer jusqu\'à 5 choix en même temps.\nLes gains que vous pouvez obtenir varient d\'un choix à un autre. Les voici : ', 'black');
+    Texte(80, 350, '- Plein : Ce sont les choix d\'un numéro unique.\nSi la roulette tombe dessus, vous remporterez 36x votre mise ! ', 'white');
+    Texte(80, 280, 'Aussi, avec un choix Plein, si votre numéro est de la même couleur \nque celle du numéro sur lequel la roulette est tombée, vous récupérerez\nla moitié de votre mise !', 'white');
+    Texte(80, 180, '- Ligne : Ce sont les choix des trois numéros d\'une même ligne.\nSi la roulette tombe sur un de ces numéros, vous remporterez 12x votre mise !', 'green');
+    Texte(80, 115, '- Sixaine : Ce sont les choix de six numéros. \nSi la roulette tombe sur un de ces numéros, vous remporterez 6x votre mise !', 'blue');
+
+  }
+  if (Page == 2) {
+    setCanvasFont('stencil', '20pt', '');
+    Texte(80, 490, '- Carrés : Ce sont les choix de quatre numéros, \nil suffit de cliquer sur les carrés gris entre les quatres numéros voulu !\nSi la roulette tombe sur un des quatres numéros, vous remporterez 9 fois votre mise !', 'grey');
+    Texte(80, 390, '- Douzaine :  Ce sont les choix de douze numéros. \nSi la roulette tombe sur un de ces numéros, vous remporterez 3x votre mise !', 'purple');
+    Texte(80, 320, '- Colonne :  Ce sont les choix de douze numéros sur la colonne choisis. \nSi la roulette tombe sur un de ces numéros, vous remporterez 3x votre mise !', 'white');
+    Texte(80, 255, '- Simple :  Ce sont les choix qui contiennent la moitié des numéros :\n  - Manque/Passe correspondent aux numéros entre 1 et 18 ou 19 et 36,\n  - Pair et Impair, \n  - Noir et Rouge,\nSi la roulette tombe sur un de ces numéros, vous remporterez 2x votre mise !', 'black');
+  }
+}
+
+
+// Etat 2 : Plateau de jeu
+
+function Plateau() {
+  Initialiser();
+  x = 0;
+  y=0;
+  Viewport(0, 700, 1400, 0);
+  // Fond Vert
+  RectanglePlein(0, 700, 1400, 700, rgb(50, 130, 50));
+
+  // Case 0 
+  ShadowOn();
+  Cercle(675, 49, 151, 'black');
+  CerclePlein(675, 50, 150, rgb(0, 200, 0));
+  ShadowOff();
+  Cercle(675, 49, 132, 'black');
+  CerclePlein(675, 50, 130, rgb(195, 195, 195));
+  Cercle(674, 27, 35, 'black');
+  CerclePlein(674, 27, 35, rgb(0, 200, 0));
+  setCanvasFont('stencil', '20pt', '');
+  Texte(667, 35, '0', 'Black');
+
+  // Fond Plateau
+  ShadowOn();
+  RectanglePlein(450, 650, 400, 600, rgb(195, 195, 195));
+  RectanglePlein(875, 600, 400, 500, rgb(195, 195, 195));
+  ShadowOff();
+
+  // Case Colonne
+  RectanglePlein(600, 700, 150, 50, rgb(195, 195, 195));
+  for (i = 0; i < 4; i = i + 1) {
+    Ligne((i + 1) * 50 + 550, 650, (i + 1) * 50 + 550, 700, 'black');
+    if (i == 3) {
+      ShadowOn();
+      Ligne((i + 1) * 50 + 550, 650, (i + 1) * 50 + 550, 700, 'black');
+      ShadowOff();
+    }
+  }
+
+  // Tableau graphique de 36 cases
+  for (i = 0; i < 5; i = i + 1) {
+    Ligne((i) * 50 + 550, 50, (i) * 50 + 550, 650, 'black');
+    for (j = 0; j < 13; j = j + 1) {
+      Ligne(550, 50 * (j + 1), 750, 50 * (j + 1), 'black');
+    }
+    if (i <= 2) {
+      Texte(558 + 50 * (i + 1), 685, 'C ' + enChaine(i + 1), 'white');
+    }
+  }
+
+  // Cases Sixaines
+  Ligne(450, 50, 450, 650, 'black');
+  for (i = 0; i < 7; i = i + 1) {
+    Ligne(450, 100 * (i + 1) - 50, 550, 100 * (i + 1) - 50, 'black');
+    if (i <= 5) {
+      setCanvasFont('stencil', '17pt', '');
+      Texte(447, 100 * (i) + 100, ' Sixaine\n        ' + enChaine(i + 1), 'blue');
+    }
+  }
+
+  // Case unique 
+  for (n = 1; n <= 3; n = n + 1) {
+    for (k = 0; k <= 11; k = k + 1) {
+      x = k * 3 + n;
+
+      // Cercle dans les cases
+      if (x >= 1 && x <= 10 || x >= 19 && x <= 28) {
+        CerclePlein(n * 50 + 575, 50 * (k + 1) + 25, 35, (x % 2 == 0) ? 'black' : 'red');
+      } else {
+        CerclePlein(n * 50 + 575, 50 * (k + 1) + 25, 35, (x % 2 == 0) ? 'red' : 'black');
+      }
+
+      //Numéros dans les cases
+      if (k <= 2) {
+        Texte(n * 50 + 569, 50 * (k + 1) + 32, enChaine(x), 'white');
+      } else {
+        Texte(n * 50 + 563, 50 * (k + 1) + 32, enChaine(x), 'white');
+      }
+    }
+  }
+
+  // Carrés entre 4 Numéros
+  for (i = 0; i < 2; i = i + 1) {
+    for (j = 0; j < 11; j = j + 1) {
+      ShadowOn();
+      Rectangle(639 + 50 * i, 110 + 50 * j, 21, 20, 'black');
+      ShadowOff();
+      RectanglePlein(640 + 50 * i, 110 + 50 * j, 20, 20, 'grey');
+    }
+  }
+
+  //Cases de douzaines
+  Ligne(850, 50, 850, 650, 'black');
+  for (i = 0; i < 4; i = i + 1) {
+    Ligne(750, i * 200 + 50, 850, i * 200 + 50, 'black');
+  }
+
+  // Numéro douzaines à droite du tableau
+  for (i = 1; i < 4; i = i + 1) {
+    x = y + 1;
+    y = x + 11;
+    if (i < 2) {
+      Texte(765, 200 * i - 42, enChaine(x) + ' à ' + y, 'purple');
+    } else {
+      Texte(760, 200 * i - 42, enChaine(x) + ' à ' + y, 'purple');
+    }
+  }
+
+  // Numéro lignes
+  for (i = 0; i < 12; i = i + 1) {
+    if (i > 8) {
+      Texte(553, i * 50 + 82, 'L ' + (i + 1), 'green');
+    } else {
+      Texte(560, i * 50 + 82, 'L ' + (i + 1), 'green');
+    }
+  }
+
+  // Cases à droite
+  for (i = 1; i < 3; i = i + 1) {
+    for (j = 1; j < 4; j = j + 1) {
+      ShadowOn();
+      RectanglePlein(i * 200 + 700, j * 150 + 100, 150, 100, i == 2 && j == 2 ? 'red' : i == 1 && j == 2 ? 'black' : i == 1 && j == 1 || j == 3 && i == 2 ? 'white' : 'grey');
+      ShadowOff();
+    }
+  }
+
+  // Texte Manque, Passe , Pair, Impair à droite.
+  setCanvasFont('stencil', '26pt', '');
+  Texte(930, 210, 'Pair', 'black');
+  Texte(1110, 210, 'Impair', 'black');
+  Texte(900, 510, 'Manque', 'black');
+  Texte(1120, 510, 'Passe', 'black');
+  //Affichage Argent restant
+  setCanvasFont('stencil', '18pt', '');
+  ShadowOn();
+  Rectangle(29, 59, 242, 50, 'black');
+  RectanglePlein(30, 60, 240, 50, 'yellow');
+  ShadowOff();
+  Texte(35, 43, ' Argent :  ', 'black');
+  Texte(155, 43, enChaine(banque) + '$', 'black');
+
+  // Boutons Menus/Règles
+  setCanvasFont('stencil', '40pt', '');
+  ShadowOn();
+  RectanglePlein(50, 650, 225, 75, rgb(195, 195, 195));
+  RectanglePlein(50, 550, 225, 75, rgb(195, 195, 195));
+  ShadowOff();
+  Texte(60, 635, 'Sortir', 'Black');
+  Texte(60, 535, 'Règles', 'Black');
+
+  // Carré Lancement Roulette 'Go !'
+  setCanvasFont('stencil', '25pt', '');
+  ShadowOn();
+  RectanglePlein(300, 600, 100, 100, rgb(195, 195, 195));
+  ShadowOff();
+  Texte(320, 560, 'Go ! ', 'Black');
+
+  // Affichage Mises
+  setCanvasFont('stencil', '15pt', '');
+  ShadowOn();
+  RectanglePlein(50, 375, 375, 250, rgb(195, 195, 195));
+  ShadowOff();
+  Texte(75, 175, 'Mises :', 'Black');
+  if (m > 0 && m < 6) {
+    for (i = 0; i <= m - 1; i = i + 1) {
+      Texte(60, 175 + 30 * (i + 1), '- ' + enChaine(Total_Mise_[i]) + '$ sur' + def_choix_joueur_[i]);
+    }
+  }
+}
+
+// Ecran Confirmation Quitter le plateau
+
+function Quitter() {
+  Etat = 0;
+  quitter = 1;
+  ShadowOn();
+  Rectangle(299, 449, 700, 300, 'black');
+  RectanglePlein(300, 450, 700, 300, 'white');
+  RectanglePlein(450, 400, 150, 75, rgb(200, 200, 200));
+  RectanglePlein(700, 400, 150, 75, rgb(200, 200, 200));
+  ShadowOff();
+  setCanvasFont('stencil', '30pt', '');
+  Texte(390, 225, 'Voulez-vous retourner au \n          menu principal ?', 'black');
+  Texte(491, 375, 'Oui ', 'black');
+  Texte(741, 375, 'Non ', 'black');
+}
+
+// Ecran Confirmation Choix Joueur 
+
+function ConfirmationCJ() {
+  Etat = 3;
+  confirmationcj = true;
+  ShadowOn();
+  Rectangle(299, 449, 700, 300, 'black');
+  RectanglePlein(300, 450, 700, 300, 'white');
+  RectanglePlein(450, 400, 150, 75, rgb(200, 200, 200));
+  RectanglePlein(700, 400, 150, 75, rgb(200, 200, 200));
+  ShadowOff();
+  setCanvasFont('stencil', '15pt', '');
+  Texte(375, 225, 'Vous avez choisi' + def_choix_joueur + '.\nSi vous gagnez, vous allez remporter ' + enChaine(coeff) + ' fois votre mise !\n\n                          Confirmez-vous votre choix ?', 'black');
+  setCanvasFont('stencil', '30pt', '');
+  Texte(491, 375, 'Oui ', 'black');
+  Texte(741, 375, 'Non ', 'black');
+
+
+}
+// Ecran Séléction Mise Joueur
+
+function Mise_Joueur() {
+  Etat = 0;
+  Total_Mise = 0;
+  for (i = 0; i < 5; i = i + 1) {
+    Total_Mise = Total_Mise + Table_Mise[i] * Nb_Mise[i];
+  }
+  ShadowOn();
+  setCanvasFont('stencil', '20pt', '');
+  Rectangle(299, 649, 700, 600, 'black');
+  RectanglePlein(300, 675, 700, 650, rgb(210, 210, 210));
+  RectanglePlein(450, 625, 150, 75, rgb(200, 200, 200));
+  RectanglePlein(700, 625, 150, 75, rgb(200, 200, 200));
+  RectanglePlein(550, 525, 200, 50, 'yellow');
+  ShadowOff();
+  Texte(473, 595, 'Annuler ', 'black');
+  Texte(725, 595, 'Je mise ! ', 'black');
+  Texte(560, 510, 'Total : ' + enChaine(Total_Mise) + '$', 'black');
+  for (i = 0; i < 5; i = i + 1) {
+    if (i <= 2) {
+      ShadowOn();
+      CerclePlein(250 + (200 * (i + 1)), 125, 120, TableCouleur[i]);
+      Cercle(249 + (200 * (i + 1)), 124, 100, TableCouleur[i]);
+      CerclePlein(250 + (200 * (i + 1)), 125, 100, TableCouleur[i]);
+      ShadowOff();
+      if (i <= 1) {
+        Texte(243 + 200 * (i + 1), 130, enChaine(Table_Mise[i]), (i == 0 ? 'black' : 'white'));
+      } else {
+        Texte(238 + 200 * (i + 1), 130, enChaine(Table_Mise[i]), 'white');
+      }
+      ShadowOn();
+      Rectangle(199 + 200 * (i + 1), 254, 100, 50, 'white');
+      RectanglePlein(200 + 200 * (i + 1), 255, 100, 50, rgb(200, 200, 200));
+      Ligne(228 + 200 * (i + 1), 255, 228 + 200 * (i + 1), 205, 'white');
+      Ligne(270 + 200 * (i + 1), 255, 270 + 200 * (i + 1), 205, 'white');
+      ShadowOff();
+      Texte((Nb_Mise[i] < 10) ? 243 + 200 * (i + 1) : 237 + 200 * (i + 1), 240, Nb_Mise[i], 'black');
+      Texte(207 + 200 * (i + 1), 240, '--', 'black');
+      Texte(280 + 200 * (i + 1), 240, '+', 'black');
+    } else {
+      ShadowOn();
+      CerclePlein(350 + (200 * (i - 2)), 325, 120, TableCouleur[i]);
+      Cercle(347 + (200 * (i - 2)), 324, 100, TableCouleur[i]);
+      CerclePlein(350 + (200 * (i - 2)), 325, 100, TableCouleur[i]);
+      ShadowOff();
+      Texte(330 + 200 * (i - 2), 330, enChaine(Table_Mise[i]), 'white');
+      ShadowOn();
+      Rectangle(299 + 200 * (i - 2), 454, 100, 50, 'white');
+      RectanglePlein(300 + 200 * (i - 2), 455, 100, 50, rgb(200, 200, 200));
+      Ligne(330 + 200 * (i - 2), 455, 330 + 200 * (i - 2), 405, 'white');
+      Ligne(368 + 200 * (i - 2), 455, 368 + 200 * (i - 2), 405, 'white');
+      ShadowOff();
+      Texte((Nb_Mise[i] < 10) ? 343 + 200 * (i - 2) : 337 + 200 * (i - 2), 440, Nb_Mise[i], 'black');
+      Texte(307 + 200 * (i - 2), 440, '--', 'black');
+      Texte(380 + 200 * (i - 2), 440, '+', 'black');
+    }
+  }
+}
+
+// Option plusieurs Mises simultanées
+
+function Plusieurs_Mises() {
+  if (m < 5) { // On limite le nombre de choix à 5 maximum
+    choix_joueur_[m] = choix_joueur;
+    def_choix_joueur_[m] = def_choix_joueur;
+    coeff_[m] = coeff;
+    Total_Mise_[m] = Total_Mise;
+    Etat = 2;
+    m = m + 1;
+    Plateau();
+  }
+}
+
+// Ecran Game Over
+
+function Alerte() {
+  alerte = true;
+  Etat = 0;
+  Total = 0;
+  ShadowOn();
+  Rectangle(299, 649, 700, Recap == 1 ? 600 : 400, 'black');
+  RectanglePlein(300, 650, 700, Recap == 1 ? 600 : 400, Recap == 1 ? 'white' : 'red');
+  RectanglePlein(480, 600, 340, 75, rgb(200, 200, 200));
+  ShadowOff();
+  setCanvasFont('stencil', '25pt', '');
+  Texte(580, 575, 'D\'accord !', 'black');
+  // Clique sur Go ! Si aucune mise choisie
+  if (m == 0) {
+    Texte(350, 390, 'Veuillez choisir au moins une mise !', 'black');
+  }
+  if (m == 5 && Recap == 0) {
+    Texte(400, 390, 'Vous avez déjà choisi 5 mises !', 'black');
+  }
+  // Récapitulatif des Gains/Pertes
+  if (Recap == 1) {
+    Total = 0;
+    ShadowOn();
+    RectanglePlein(550, 500, 200, 50, 'yellow');
+    RectanglePlein(450, 110, 420, 60, rgb(200, 200, 100));
+    ShadowOff();
+    setCanvasFont('stencil', '15pt', '');
+    for (i = 0; i < m; i = i + 1) {
+      if (gain_[i] == 0 && Recup_Mise_[i] == 0) {
+        Texte(350, 135 + (i * 60), '- Vous avez perdu votre mise sur\n' + def_choix_joueur_[i] + ' soit : ' + enChaine(Total_Mise_[i]) + '$.', 'red');
+      }
+      if (gain_[i] == 0 && Recup_Mise_[i] != 0) {
+        Texte(350, 135 + (i * 60), '- Vous récupérer la moitié de votre mise\n sur' + def_choix_joueur_[i] + ' soit : ' + enChaine(Recup_Mise_[i]) + '$.', 'orange');
+        banque = banque + Recup_Mise_[i];
+      }
+      if (gain_[i] != 0) {
+        Texte(350, 135 + (i * 60), '- Vous gagnez ' + enChaine(coeff_[i]) + 'x votre mise sur\n' + def_choix_joueur_[i] + ' soit : ' + enChaine(gain_[i]) + '$.', 'green');
+      }
+      Total = Total + gain_[i] + Recup_Mise_[i] - Total_Mise_[i];
+
+    }
+    setCanvasFont('stencil', '20pt', '');
+    Texte(460, 75, 'La Roulette est tombée sur le : ', 'black');
+    Texte(650, 100, enChaine(roulette), Rouge == true ? 'red' : Noir == true ? 'black' : 'green');
+    Texte(560, 485, 'Total : ' + enChaine(banque) + '$', 'black');
+  }
+}
+
+function GameOver() {
+  Etat = 0;
+  ShadowOn();
+  Rectangle(299, 449, 700, 300, 'black');
+  RectanglePlein(300, 450, 700, 300, 'red');
+  RectanglePlein(480, 400, 340, 75, rgb(200, 200, 200));
+  ShadowOff();
+  setCanvasFont('stencil', '30pt', '');
+  Texte(335, 225, '                 Vous êtes ruiné... \nVous repartez les mains vides...', 'black');
+  Texte(550, 375, 'D\'accord :\'(', 'black');
+}
+
+// Partie Lancement de la roulette
+
+function AffichageRoulette() {
+  Etat = 0;
+  RectanglePlein(0, 0, 1600, 750, rgb(50, 130, 50));
+  ShadowOn();
+  CerclePlein(700, 325, 580, rgb(169, 169, 169));
+  Cercle(700, 325, 500, 'black');
+  ShadowOff();
+  Cercle(700, 325, 580, 'black');
+  setCanvasFont('stencil', '13pt', '');
+  for (i = 0; i < 37; i = i + 1) {
+    Ligne(700, 325, 700 + 290 * Math.cos((2 * (i + 27) * Math.PI) / 37), 325 + 290 * Math.sin((2 * (i + 27) * Math.PI) / 37), 'gold');
+    Texte(660 + 270 * Math.cos((2 * (i + 27.5) * Math.PI) / 37), 330 + 272 * Math.sin((2 * (i + 27.5) * Math.PI) / 37), TableauRoulette[i] >= 10 ? '       ' + enChaine(TableauRoulette[i]) : '        ' + enChaine(TableauRoulette[i]), i == 0 ? 'green' : i % 2 == 0 ? 'black' : 'red');
+    PolygonePlein(700, 325, 700 + 250 * Math.cos((2 * (i + 27) * Math.PI) / 37), 325 + 250 * Math.sin((2 * (i + 27) * Math.PI) / 37), 700 + 250 * Math.cos((2 * (i + 28) * Math.PI) / 37), 325 + 250 * Math.sin((2 * (i + 28) * Math.PI) / 37), i == 0 ? 'green' : i % 2 == 0 ? 'black' : 'red');
+    //             x0  y0, x1=x0+r  * Cos(2*(i+27(pos du 0)*PI)/nb triangle),      y1 =x0+  r *     Sin(2 * (i+27)(pos 0)*PI)/nbtriangle
+  }
+  CerclePlein(700, 325, 350, 'gold');
+  ShadowOn();
+  setCanvasFont('stencil', '40pt', '');
+  Texte(565, 340, 'Roulette', 'red');
+  ShadowOff();
+}
+
+function LancementRoulette(t) {
+  if (t>=0 && t < 200) { // modifier le temps
+    Initialiser();
+    AffichageRoulette();
+
+    Boulex = 700 + 220 * Math.cos(((t * 30) * 3.14 * 2));
+    Bouley = 330 + 220 * Math.sin(((t * 30) * 3.14 * 2));
+
+    Mf_Boulex = Math.floor(Boulex);
+    Mf_Bouley = Math.floor(Bouley);
+
+    ShadowOn();
+    CerclePlein(Boulex, Bouley, 30, 'white');
+    ShadowOff();
+  setTimeout('LancementRoulette(' + (t + 1) + ')', 1);
+  } 
+    if (t >= 200 && t < 600) {
+
+      if (Mf_Boulex <= Mf_Roulette_x + 5 && Mf_Boulex >= Mf_Roulette_x - 5 && Mf_Bouley <= Mf_Roulette_y + 5 && Mf_Bouley >= Mf_Roulette_y - 5) {
+        
+        CerclePlein(Boulex, Bouley, 30, 'white');
+        setTimeout('LancementRoulette(' + (t + 1) + ')', 1);
+      } else {
+        Initialiser();
+        AffichageRoulette();
+
+        Boulex = 700 + 220 * Math.cos(((t * 30) * 3.14 * 2));
+        Bouley = 330 + 220 * Math.sin(((t * 30) * 3.14 * 2));
+
+        Mf_Boulex = Math.floor(Boulex);
+        Mf_Bouley = Math.floor(Bouley);
+        ShadowOn();
+        CerclePlein(Boulex, Bouley, 30, 'white');
+        ShadowOff();
+        setTimeout('LancementRoulette(' + (t + 1) + ')', 1);
+      }
+          
+    }else{
+      if(t==600){
+        LancementRouletteFin();
+      }
+    }
+   
+}
+
+
+function LancementRouletteFin() {
+  Etat =2;
+  Plateau();
+  t=-1;
+  Recap = 0;
+  Noir = false;
+  Rouge = false;
+  for (i = 0; i < 18; i = i + 1) {
+    if (noir[i] == roulette) {
+      Noir = true;
+    }
+    if (rouge[i] == roulette) {
+      Rouge = true;
+    }
+  }
+  RougeJ = [];
+  NoirJ = [];
+  gain = [];
+  gain_ = [0, 0, 0, 0, 0];
+  Perte = [0, 0, 0, 0, 0];
+  Recup_Mise = [0, 0, 0, 0, 0];
+  Recup_Mise_ = [0, 0, 0, 0, 0];
+  for (j = 0; j < m; j = j + 1) {
+    if (Taille(choix_joueur_[j]) == 1) {
+      for (i = 0; i < 18; i = i + 1) {
+        if (noir[i] == choix_joueur_[j]) {
+          NoirJ[j] = true;
+        }
+        if (rouge[i] == choix_joueur_[j]) {
+          RougeJ[j] = true;
+        } else {
+          Noir[j] = false;
+          Rouge[j] = false;
+        }
+      }
+    }
+    for (i = 0; i < Taille(choix_joueur_[j]); i = i + 1) {
+      gain[i] = 0;
+      if (choix_joueur_[j][i] == roulette) {
+        gain[i] = 1;
+        if (gain[i] == 1) {
+          gain_[j] = gain_[j] + coeff_[j] * Total_Mise_[j];
+          banque = banque + gain_[j];
+        }
+      }
+    }
+    if (gain_[j] == 0) {
+      // Partie Récupération de Mise en cas de même couleur, si Choix Unique
+      if (Noir && NoirJ[j] || Rouge && RougeJ[j]) {
+        Recup_Mise[j] = 1;
+        if (Recup_Mise[j] == 1) {
+          Recup_Mise_[j] = Math.floor(Total_Mise_[j] / 2);
+        }
+      } else {
+        Recup_Mise[j] = 0;
+        Recup_Mise_[j] = 0;
+      }
+    }
+    // Récapitulatif des Gains et/ou Pertes
+    Recap = 1;
+    Alerte();
+  }
+}
+
+// Définition des différentes Fonctions MouseClick
+
+function MouseClick(x, y) {
+  if (Etat == 1) {
+    MouseClickMenu(x, y);
+  }
+  if (Etat == 2) {
+    MouseClickPlateau(x, y);
+  }
+  if (Choix_Mise == true) {
+    MouseClickMise(x, y);
+  }
+  if (regles == 1) {
+    MouseClickRegles(x, y);
+  }
+  if (quitter == 1) {
+    MouseClickQuitter(x, y);
+  }
+  if (alerte == true) {
+    MouseClickAlerte(x, y);
+  }
+  if (gameover == true) {
+    MouseClickGameOver(x, y);
+  }
+  if (confirmationcj == true) {
+    MouseClickChoixJoueur(x, y);
+  }
+}
+
+function MouseClickMenu(x, y) {
+  if (x >= 450 && x <= 1100 && y >= 100 && y <= 190) {
+    Etat = 2;
+    Plateau();
+  } else if (x >= 535 && x <= 1010 && y >= 255 && y <= 335) {
+    regles = 1;
+    Page = 1;
+    Regles();
+  } else if (x >= 510 && x <= 915 && y >= 410 && y <= 485) {
+    // Crédits à faire
+  }
+}
+
+function MouseClickRegles(x, y) {
+  if (x >= 10 && x <= 60 && y <= 325 && y >= 275) {
+    if (Page == 1) {
+      Page = 0;
+      regle = 0;
+      if (Etat == 2) {
+        Plateau();
+      }
+      if (Etat == 1) {
+        Menu();
+      }
+    }
+    if (Page == 2) {
+      Page = 1;
+      Regles();
+    }
+  }
+  if (x >= 1340 && x <= 1390 && y <= 325 && y >= 275) {
+    if (Page == 1) {
+      Page = 2;
+      Regles();
+    }
+  }
+}
+
+function MouseClickQuitter(x, y) {
+  if (x >= 450 && x <= 600 && y <= -330 && y >= -400) {
+    Etat = 1;
+    Menu();
+    quitter = 0;
+  }
+  if (x >= 700 && x <= 850 && y <= -330 && y >= -400) {
+    Etat = 2;
+    Plateau();
+    quitter = 0;
+  }
+}
+
+function MouseClickChoixJoueur(x, y) {
+  if (Etat == 3) {
+    if (x >= 450 && x <= 600 && y <= -330 && y >= -400) {
+      Choix_Mise = true;
+      Nb_Mise = [0, 0, 0, 0, 0];
+      Mise_Joueur();
+      confirmationcj = false;
+    }
+    if (x >= 700 && x <= 850 && y <= -330 && y >= -400) {
+      Etat = 2;
+      choix_joueur = [];
+      coeff = 0;
+      Plateau();
+      confirmationcj = false;
+    }
+  }
+}
+
+function MouseClickMise(x, y) {
+  for (i = 0; i < 5; i = i + 1) {
+    if (i <= 2) {
+      if (x >= 400 + i * 200 && x <= 430 + i * 200 && y <= -205 && y >= -255) {
+        if (Nb_Mise[i] > 0) {
+          Nb_Mise[i] = Nb_Mise[i] - 1;
+        }
+      }
+      if (x >= 470 + (i * 200) && x <= 500 + (200 * i) && y <= -205 && y >= -255) {
+        if (Total_Mise + Table_Mise[i] <= banque) {
+          Nb_Mise[i] = Nb_Mise[i] + 1;
+        }
+      }
+    } else {
+      if (x >= 500 + 200 * (i - 3) && x <= 530 + 200 * (i - 3) && y >= -455 && y <= -405) {
+        if (Nb_Mise[i] > 0) {
+          Nb_Mise[i] = Nb_Mise[i] - 1;
+        }
+      }
+      if (x >= 570 + 200 * (i - 3) && x <= 600 + 200 * (i - 3) && y >= -455 && y <= -405) {
+        if (Total_Mise + Table_Mise[i] <= banque) {
+          Nb_Mise[i] = Nb_Mise[i] + 1;
+        }
+      }
+    }
+
+  }
+  Mise_Joueur();
+  if (x >= 450 && x <= 600 && y <= -550 && y >= -625) {
+    Etat = 2;
+    Plateau();
+    Total_Mise = 0;
+    Choix_Mise = false;
+  }
+  if (x >= 700 && x <= 850 && y <= -550 && y >= -625) {
+    if (Total_Mise != 0) {
+      Choix_Mise = false;
+      banque = banque - Total_Mise;
+      Plusieurs_Mises();
+    }
+  }
+}
+
+function MouseClickAlerte(x, y) {
+  if (x >= 480 && x <= 720 && y <= -525 && y >= -600) {
+    if (m == 0 || m == 5) {
+      Etat = 2;
+      Plateau();
+      alerte = false;
+    }
+    if (Recap == 1) {
+      Recap = 0;
+      if (banque > 0) {
+        Etat = 2;
+        m = 0;
+        Total_Mise = 0;
+        Plateau();
+        gameover = false;
+      } else {
+        GameOver();
+        gameover = true;
+      }
+    }
+  }
+}
+
+function MouseClickGameOver(x, y) {
+  if (x >= 480 && x <= 720 && y <= -325 && y >= -400) {
+    Etat = 1;
+    Menu();
+  }
+}
+
+function MouseClickPlateau(x, y) {
+  //	Variables Choix du joueur
+  choix_joueur = [];
+  gain = 0;
+  def_choix_joueur = '';
+  continuer = '';
+
+  // Choix Règles ou Sortir
+  if (x >= 50 && x <= 275 && y <= -550 && y >= -650) {
+    quitter = 1;
+    Quitter();
+  }
+  if (x >= 50 && x <= 275 && y <= -450 && y >= -550) {
+    regles = 1;
+    Page = 1;
+    Regles();
+  }
+
+  // Lancement Roulette 'Go ! '
+  if (x >= 300 && x <= 400 && y <= -500 && y >= -600) {
+    if (m > 0) {
+     
+      r = 0;
+      roulette = 0;
+      roulette = Hasard(37);
+      for (i = 0; i < 37; i = i + 1) {
+        if (TableauRoulette[i] == roulette) {
+          r = i;
+        }
+      }
+      Mf_Roulette_x = Math.floor((700 + 220 * Math.cos((2 * ((r + 27.5)) * 3.14) / 37)));
+      Mf_Roulette_y = Math.floor((330 + 220 * Math.sin((2 * ((r + 27.5)) * 3.14) / 37)));
+      t=0;
+      LancementRoulette(0);
+      
+    } else {
+      Alerte();
+    }
+  }
+
+  //Choix Douzaines
+  for (i = 0; i < 3; i = i + 1) {
+    if (x > 750 && x <= 850 && y <= (i * (-200)) - 50 && y >= ((i + 1) * (-200)) - 50) {
+      choix_joueur = SousTableau(all, i * 12, 12);
+      coeff = 3;
+      def_choix_joueur = ' la Douzaine de ' + enChaine(i * 12 + 1) + ' à ' + enChaine(i * 12 + 12);
+    }
+  }
+
+  // Choix chiffre unique 
+  for (j = 1; j < 13; j = j + 1) {
+    for (i = 1; i < 4; i = i + 1) {
+      if (i == 1 && j == 1 ? x >= 600 && x <= 639 && y <= -50 && y >= -100 || x >= 640 && x <= 650 && y <= -50 && y >= -92 : i == 2 && j == 1 ? x >= 650 && x <= 700 && y <= -50 && y >= -92 || x >= 661 && x <= 689 && y <= -92 && y >= -100 : i == 3 && j == 1 ? x >= 700 && x <= 710 && y <= -50 && y >= -92 || x >= 711 && x <= 750 && y <= -50 && y >= -100 : i == 1 && j == 12 ? x >= 600 && x <= 639 && y <= -600 && y >= -650 || x >= 639 && x <= 650 && y <= -611 && y >= -650 : i == 2 && j == 12 ? x >= 650 && x <= 700 && y <= -611 && y >= -650 || x <= 661 && x >= 689 && y <= -600 && y >= -611 : i == 3 && j == 12 ? x >= 700 && x <= 710 && y <= -611 && y >= -650 || x >= 710 && x <= 750 && y <= -600 && y >= -650 : i == 1 && j >= 2 && j <= 11 ? (x >= 600 && x <= 639 && y <= (j * -50) && (y >= (j + 1) * (-50) - 50) || x >= 639 && x <= 650 && y <= -50 * j - 11 && y >= -50 * (j + 1) + 9) : i == 2 && j >= 2 && j <= 11 ? (x >= 650) && (x <= 661) && y <= (j * -50) - 11 && (y >= (j + 1) * (-50) + 9) || (x >= 661) && (x <= 689) && y <= (j * -50) && y >= (j + 1) * (-50) || (x >= 689) && (x <= 700) && y <= (j * -50) - 11 && y >= (j + 1) * (-50) + 9 : i == 3 && j >= 2 && j <= 11 ? x >= 700 && x <= 711 && y <= (j * -50) - 11 && y >= ((j + 1) * -50) + 9 || x >= 711 && x <= 750 && y <= (j * (-50)) && y >= ((j + 1) * -50) : '') {
+        choix_joueur[0] = 3 * (j - 1) + i;
+        coeff = 36;
+        def_choix_joueur = ' le ' + enChaine(choix_joueur) + ' Plein ';
+      }
+    }
+  }
+
+  // Choix du Zéro
+  if ((x >= 617) && (x <= 734) && (y <= -26) && (y >= -49) || (x >= 630) && (x <= 723) && (y <= -13) && (y >= -26) || (x >= 648) && (x <= 707) && (y <= -6) && (y >= -13)) {
+    choix_joueur[0] = 0;
+    coeff = 36;
+    def_choix_joueur = ' le 0';
+  }
+
+  // Choix Carré 
+  for (i = 0; i < 2; i = i + 1) {
+    for (j = 0; j < 12; j = j + 1) {
+      if (x >= i * 50 + 639 && x <= i * 50 + 660 && y <= -92 + (-49 * j) && y >= -111 + (-50 * j)) {
+        for (k = 0; k < 4; k = k + 1) {
+          if (k < 2) {
+            choix_joueur[k] = SousTableau(all, i + (j * 3) + (k), 1);
+          } else {
+            choix_joueur[k] = SousTableau(all, i + (j * 3) + (k + 1), 1);
+          }
+        }
+        coeff = 9;
+        def_choix_joueur = ' le carré ' + enChaine(choix_joueur);
+      }
+    }
+  }
+
+  // Choix Colonne 
+  for (i = 0; i < 12; i = i + 1) {
+    for (j = 0; j < 3; j = j + 1) {
+      if ((x >= (j * 50) + 600) && (x <= ((j + 1) * 50) + 600) && (y <= -650) && (y >= -700)) {
+        choix_joueur[i] = all[j + i * 3];
+        coeff = 3;
+        def_choix_joueur = ' la Colonne ' + enChaine(j + 1);
+      }
+    }
+  }
+
+  // Choix Ligne
+  for (k = 0; k < 12; k = k + 1) {
+    if ((x >= 550) && (x <= 600) && (y <= ((k * -50) - 50)) && (y >= ((k + 1) * (-50) - 50))) {
+      choix_joueur = SousTableau(all, k * 3, 3);
+      coeff = 12;
+      def_choix_joueur = ' la Ligne de ' + enChaine(k * 3 + 1) + ' à ' + enChaine(k * 3 + 3);
+    }
+  }
+
+  // Choix Simples (Pair, Impair, Manque, Passe, Rouge, Noir)
+  // Pair et Impair
+  for (i = 0; i < 2; i = i + 1) {
+    if ((x >= 900 + 200 * i) && (x <= 1050 + 200 * i) && (y <= -150) && (y >= -250)) {
+      if (i == 0) {
+        choix_joueur = pair;
+        def_choix_joueur = ' les nombres pairs ';
+      } else {
+        choix_joueur = impair;
+        def_choix_joueur = ' les nombres impairs ';
+      }
+      coeff = 2;
+    }
+  }
+
+  // Rouge et Noir 
+  for (i = 0; i < 2; i = i + 1) {
+    if ((x >= 900 + 200 * i) && (x <= 1050 + 200 * i) && (y <= -300) && (y >= -400)) {
+      if (i == 0) {
+        choix_joueur = noir;
+        def_choix_joueur = ' les nombres noirs ';
+      } else {
+        choix_joueur = rouge;
+        def_choix_joueur = ' les nombres rouges ';
+      }
+      coeff = 2;
+    }
+  }
+
+  // Manque et Passe 
+  for (i = 0; i < 2; i = i + 1) {
+    if ((x >= 900 + 200 * i) && (x <= 1050 + 200 * i) && (y <= -450) && (y >= -550)) {
+      choix_joueur = SousTableau(all, i * 18, 18);
+      coeff = 2;
+      if (i == 0) {
+        def_choix_joueur = ' Manque, de ' + enChaine(i * 18 + 1) + ' à ' + enChaine((i + 1) * 18);
+      } else {
+        if (i == 1) {
+          def_choix_joueur = ' Passe, de ' + enChaine(i * 18 + 1) + ' à ' + enChaine((i + 1) * 18);
+        }
+      }
+    }
+  }
+
+  // Choix Sixaines
+  for (i = 0; i < 6; i = i + 1) {
+    if ((x >= 450) && (x <= 550) && (y <= ((i) * -100) - 50) && (y >= (i + 1) * (-100) - 50)) {
+      choix_joueur = SousTableau(all, i * 6, 6);
+      coeff = 6;
+      def_choix_joueur = ' la Sixaine allant de ' + enChaine(i * 6 + 1) + ' à ' + enChaine((i + 1) * 6);
+    }
+  }
+  if (Taille(choix_joueur) != 0) {
+    if (m == 5) {
+      alerte = true;
+      Alerte();
+    } else {
+      setTimeout(ConfirmationCJ, 0.1);
+    }
+  }
+}

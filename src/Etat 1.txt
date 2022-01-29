@@ -1,0 +1,49 @@
+var Etat1;
+
+
+Viewport(0, 0, 1365, 595);
+
+turtleEnabled = false;
+Initialiser();
+DrawImage('https://bfgblog-a.akamaihd.net/uploads/2013/11/6-4-European-Roulette.png', 50, 50, 500, 500);
+
+
+RectanglePlein(0, 0, 1500, 1500, rgb(35, 190, 35));
+
+ShadowOn();
+Rectangle(400, 100, 700, 90, 'black');
+RectanglePlein(392, 107, 700, 75, rgb(195, 195, 195));
+setCanvasFont('stencil', '50pt', '');
+Texte(670, 165, 'Jouer', 'red');
+
+
+
+Rectangle(365, 250, 650, 90, 'black');
+RectanglePlein(372, 257, 635, 75, rgb(195, 195, 195));
+setCanvasFont('stencil', '50pt', '');
+Texte(600, 317, 'Regles', 'red');
+
+
+Rectangle(365, 400, 550, 90, 'black');
+RectanglePlein(372, 407, 535, 75, rgb(195, 195, 195));
+setCanvasFont('stencil', '50pt', '');
+Texte(550, 467, 'Credit', 'red');
+ShadowOff();
+
+
+function MouseClick(x, y) {
+  if (x >= 450 && x <= 1100 && y >= 100 && y <= 190) {
+
+    Ecrire("1");
+
+  } else if (x >= 535 && x <= 1010 && y >= 255 && y <= 335) {
+
+    Ecrire("2");
+
+  } else if (x >= 510 && x <= 915 && y >= 410 && y <= 485) {
+
+    Ecrire("3");
+  }
+
+  
+}

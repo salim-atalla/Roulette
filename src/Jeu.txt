@@ -1,0 +1,112 @@
+
+
+Viewport(0, 0, 1365, 590);
+
+function Photo(){
+
+turtleEnabled = false;
+Initialiser();
+DrawImage('https://bps.hs.llnwd.net/e2/v2/common/Common/Common/neutral/image/2017/03/game.netentBlackjack3Hand.backgroundimage_v3.jpg', 150, 0, 1070, 700);
+
+
+}
+
+
+for (i = 0; i < 4; i++) {
+
+  ShadowOn();
+  Ligne((i * 100) + 500, 150, (i * 100) + 500, 450, "Black");
+  ShadowOff();
+
+  for (j = 0; j < 4; j++) {
+    ShadowOn();
+    Ligne(500, (j * 100) + 150, 800, (j * 100) + 150, "Black");
+    ShadowOff();
+  }
+
+}
+
+
+if (Hasard(3) == 0) {
+  x = 5 + "$";
+} else if (Hasard(3) == 1) {
+  x = 10 + "$";
+} else if (Hasard(3) == 2) {
+  x = 20 + "$";
+} else {
+  x = "X";
+}
+
+for (n = 0; n < 3; n++) {
+
+  if (Hasard(3) == 0) {
+    x = 5 + "$";
+  } else if (Hasard(3) == 1) {
+    x = 10 + "$";
+  } else if (Hasard(3) == 2) {
+    x = 20 + "$";
+  } else {
+    x = "X";
+  }
+
+
+  Texte((n * 100) + 525, 180, x, "Black");
+  setCanvasFont("Germanica", "30pt", "");
+
+
+
+  for (k = 1; k < 3; k++) {
+
+    if (Hasard(3) == 0) {
+      x = 5 + "$";
+    } else if (Hasard(3) == 1) {
+      x = 10 + "$";
+    } else if (Hasard(3) == 2) {
+      x = 20 + "$";
+    } else {
+      x = "X";
+    }
+
+    Texte((n * 100) + 525, (k * 100) + 180, x, "Black");
+    setCanvasFont("Germanica", "30pt", "");
+
+  }
+}
+
+function MouseClick(n, k) {
+
+  for (n = 0; n < 3; n++) {
+
+
+    RectanglePlein((n * 100) + 205, 205, 90, 90, 'grey');
+
+
+    for (k = 1; k < 3; k++) {
+
+      RectanglePlein((n * 100) + 205, (k * 100) + 205, 90, 90, 'grey');
+
+    }
+  }
+}
+/*
+function MouseClick(x, y) {
+  
+  for(i = 0; i < 4; i++){
+    for (j = 0; j < 4; j++){
+    
+    if (){
+    
+    }else if(){
+    
+    
+    }
+      
+    }
+  
+  
+  }
+
+  Ecrire("x = " + x + " y = " + y);
+
+}
+*/
